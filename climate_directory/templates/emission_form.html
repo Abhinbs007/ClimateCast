@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClimateTRACE API Emissions Sources</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: #EBFBE2;
+            color: #333;
+            padding: 0;
+        }
+
+        /* Navigation Bar */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #FFFBF5;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav img.logo-green {
+            height: 50px;
+        }
+        nav h1 {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 40px;
+    color: rgba(76, 131, 62);
+    font-weight: bolder;
+    margin: 0;
+    padding-right: 140px;
+
+    /* Enhancements */
+    font-family: 'Poppins', sans-serif; 
+    letter-spacing: 2px; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
+    transition: transform 0.3s ease, color 0.3s ease; 
+}
+
+
+        /* Form Styling */
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* Stylish Dropdown */
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #555;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    appearance: none; /* Removes default dropdown arrow in some browsers */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns%3D%22http://www.w3.org/2000/svg%22 width%3D%2210%22 height%3D%226%22 viewBox%3D%220 0 10 6%22%3E%3Cpath fill%3D%22%23333%22 d%3D%22M0 0l5 6 5-6z%22/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px 12px;
+}
+select:hover {
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+select:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 4px #007BFF;
+}
+option {
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #ffffff;
+}
+
+        
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            background: #EBFBE2;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        thead {
+            background-color: #007BFF;
+            color: #ffffff;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        tr:nth-child(even) {
+            background-color: #ffefdf;
+        }
+        tr:hover {
+            background-color: #ffd7c9;
+        }
+        td {
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Responsive Design */
+        @media (max-width: auto ) {
+            nav {
+                flex-wrap: wrap;
+            }
+            nav h1 {
+                font-size: 30px;
+            }
+            form, table {
+                width: 100%;
+                margin: 0 auto;
+            }
+            th, td {
+                font-size: 12px;
+                padding: 10px;
+            }
+            button {
+                font-size: 14px;
+            }
+        }
+        .submit_button{
+            padding-top: 120px;
+        }
+        
+
+        .bubble-label {
+        display: block;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #4A4A4A;
+    }
+
+    .bubble-input, .bubble-select {
+        width: 100%;
+        max-width: 300px;
+        padding: 10px 15px;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+        color: #333;
+        background-color: #f9f9f9;
+        border: 2px solid #ddd;
+        border-radius: 25px;
+        outline: none;
+        appearance: none;
+        cursor: pointer;
+        transition: border 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 10px;
+    }
+
+    .bubble-input:hover, .bubble-select:hover {
+        border-color: #888;
+        border-radius: 20px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .bubble-input:focus, .bubble-select:focus {
+        border-color: #4CAF50;
+        box-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
+    }
+
+    .bubble-input {
+        border-radius: 25px;
+    }
+
+    .bubble-select option {
+        background-color: #ffffff;
+        color: #333;
+    }
+
+    button {
+        padding: 12px 20px;
+        background-color: #4C833E;
+        color: white;
+        font-size: 18px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+            background-color: #D2042D;
+        }
+
+    button:focus {
+        outline: none;
+    }
+
+
+    .dot {
+  display: inline-block;
+  width: 10px; /* Adjust size as needed */
+  height: 10px; /* Adjust size as needed */
+  border-radius: 50%;
+  margin-right: 8px; /* Adds space between the dot and text */
+  vertical-align: middle; /* Aligns with text */
+}
+
+      
+    
+        
+    </style>
+</head>
+<body>
+    <nav>
+        <img class="logo-green" decoding="async" src="https://greenfi.ai/wp-content/uploads/2023/10/logo-Green.svg" alt="Logo Green">
+        <h1>Get Emissions Sources</h1>
+    </nav>
+    <form id="emissionsForm" method="POST" action="{% url 'get_emissions_sources' %}">
+        {% csrf_token %}
+        
+        <label for="limit" class="bubble-label">Number of Records Want (Limit):</label>
+        <input type="number" id="limit" name="limit" value="100" placeholder="Enter number of records" class="bubble-input">
+        
+        <label for="year" class="bubble-label">Year:</label>
+        <select id="year" name="year" class="bubble-select">
+            <option value="" disabled selected>Select a year</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+        </select>
+        
+        <label for="countries" class="bubble-label">Country :</label>
+        <input type="text" id="countries" name="countries" placeholder="Enter country codes, e.g., USA, CAN" class="bubble-input">
+        
+        <label for="sectors" class="bubble-label">Sectors:</label>
+        <select id="sectors" name="sectors" class="bubble-select">
+            <option value="" disabled selected>Select a sector</option>
+            <option value="Agriculture">
+                <span class="dot" style="background-color: rgb(232, 81, 108);"></span> Agriculture
+            </option>
+            <option value="Buildings">
+                <span class="dot" style="background-color: rgb(232, 81, 108);"></span> Buildings
+            </option>
+            <option value="Transportation">
+                <span class="dot" style="background-color: rgb(232, 81, 108);"></span> Transportation
+            </option>
+            <option value="Waste">
+                <span class="dot" style="background-color: rgb(232, 81, 108);"></span> Waste
+            </option>
+            <option value="Power">
+                <span class="dot" style="background-color: rgb(232, 81, 108);"></span> Power
+            </option>
+            <option value="Manufacturing">
+                <span class="dot" style="background-color: rgb(232, 81, 108);"></span> Manufacturing
+            </option>
+        </select>
+        
+        <button type="submit">Fetch Emission Data</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('emissionsForm').onsubmit = async function(event) {
+            event.preventDefault(); 
+
+            const formData = new FormData(this);
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: formData
+            });
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = ""; 
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.assets) { 
+                    const table = document.createElement('table');
+                    const thead = document.createElement('thead');
+                    const tbody = document.createElement('tbody');
+
+                    const headers = Object.keys(data.assets[0] || {});
+                    const headerRow = document.createElement('tr');
+                    headers.forEach(header => {
+                        const th = document.createElement('th');
+                        th.textContent = header;
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+
+                    data.assets.forEach(asset => {
+                        const row = document.createElement('tr');
+                        headers.forEach(header => {
+                            const td = document.createElement('td');
+                            const value = asset[header];
+                            if (Array.isArray(value)) {
+                                td.textContent = value.map(item => 
+                                    typeof item === 'object' ? JSON.stringify(item) : item
+                                ).join(', ');
+                            } else if (typeof value === 'object' && value !== null) {
+                                td.textContent = JSON.stringify(value);
+                            } else {
+                                td.textContent = value || '';
+                            }
+                            row.appendChild(td);
+                        });
+                        tbody.appendChild(row);
+                    });
+
+                    table.appendChild(thead);
+                    table.appendChild(tbody);
+                    resultDiv.appendChild(table);
+                } else {
+                    resultDiv.textContent = "No data available.";
+                }
+            } else {
+                const error = await response.json();
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        };
+    </script>
+</body>
+</html>

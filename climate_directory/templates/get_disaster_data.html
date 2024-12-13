@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Data by Location</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #EBFBE2;
+            color: #333;
+        }
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #FFFBF5;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav img.logo-green {
+            height: 50px;
+        }
+        nav h1 {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 40px;
+    color: rgba(76, 131, 62);
+    font-weight: bolder;
+    margin: 0;
+    padding-right: 140px;
+
+    /* Enhancements */
+    font-family: 'Poppins', sans-serif; 
+    letter-spacing: 2px; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
+    transition: transform 0.3s ease, color 0.3s ease; 
+}
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 16px;
+            border: 5px solid #037d50;
+            border-radius: 15px;
+            font-size: 2rem;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+        
+        }
+        button {
+            background-color: #4C833E;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 25px;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #D2042D;
+        }
+
+        /* Enhanced error styling */
+        .error {
+            color: #d9534f;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8d7da;
+            border-radius: 5px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .table-container {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-right: 100px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #3b82f6;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+        td {
+            text-align: center;
+            padding: 10px;
+            background-color: #fffaf0;
+        }
+        tr:nth-child(even) td {
+            background-color: #ffefdf;
+        }
+        tr:hover td {
+            background-color: #ffd7c9;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img class="logo-green" decoding="async" src="https://greenfi.ai/wp-content/uploads/2023/10/logo-Green.svg" alt="Logo Green">
+        <h1> Disaster Data Viewer</h1>
+    </nav>
+    <div class="container">
+        <h1>Enter the location you want to know</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="location">Enter Location:</label>
+            <input type="text" id="location" name="location" required>
+            <button type="submit">Search</button>
+        </form>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if data %}
+        </div>
+        <div> <div class="table-container">
+            <h2>Disaster in Location:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        {% for key in data.0.keys %}
+                            <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                        <tr>
+                            {% for value in row.values %}
+                                <td>{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

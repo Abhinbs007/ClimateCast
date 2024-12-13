@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenFi Climate Cast</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: #EBFBE2;
+            color: #333;
+            padding: 0;
+        }
+
+        /* Navigation Bar */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #FFFBF5;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav img.logo-green {
+            height: 50px;
+        }
+        nav h1 {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 40px;
+            color: rgba(76, 131, 62);
+            font-weight: bolder;
+            margin: 0;
+            padding-right: 140px;
+
+            /* Enhancements */
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        nav h1:hover {
+            transform: scale(1.05);
+            color: rgba(76, 131, 62, 0.9);
+        }
+
+        /* Description */
+        .description {
+            color: #243642;
+            font-size: 36px;
+            text-align: center;
+            padding: 30px;
+            font-weight: bold;
+            text-shadow: 3px 3px 10px rgba(10, 168, 192, 0.5);
+        }
+
+        /* Button Styling */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        .button {
+            background-color: #28a745;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #218838;
+            transform: scale(1.1);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #fff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                flex-wrap: wrap;
+            }
+            nav h1 {
+                font-size: 30px;
+            }
+            .button-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <img class="logo-green" decoding="async" src="https://greenfi.ai/wp-content/uploads/2023/10/logo-Green.svg" alt="Logo Green">
+        <h1>GreenFi Climate Cast</h1>
+    </nav>
+
+    <!-- Description -->
+    <div class="description">
+        GreenFi Climate Cast is a climate data platform that helps protect your assets from environmental destruction.
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-container">
+        <a href="{% url 'get_disaster_data' %}" class="button">Disaster Data</a>
+        <a href="{% url 'get_emissions_sources' %}" class="button">Emission Data</a>
+        <a href="{% url 'weather_history_view' %}" class="button">Weather History</a>
+    </div>
+</body>
+</html>
