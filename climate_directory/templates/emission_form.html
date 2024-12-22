@@ -122,36 +122,43 @@ option {
         
 
         /* Table Styling */
+        
         table {
-            width: 100%;
-            margin: 20px 0;
-            border-collapse: collapse;
-            background: #EBFBE2;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    background: #ffefdf;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid black; /* Add black border */
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid black; /* Add black border to cells */
+}
         thead {
             background-color: #007BFF;
             color: #ffffff;
         }
-        th, td {
-            padding: 15px;
-            text-align: left;
-        }
+        
         th {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    word-spacing: 4px; /* Adjust the value as needed */
+}
+
         tr:nth-child(even) {
             background-color: #ffefdf;
         }
-        tr:hover {
-            background-color: #ffd7c9;
-        }
+        tbody tr:hover {
+    background-color: white;
+}
         td {
-            font-size: 14px;
+            
             color: #555;
         }
 
@@ -254,6 +261,25 @@ option {
   vertical-align: middle; /* Aligns with text */
 }
 
+.country-code-button {
+            background-color: #4CAF50; /* Green background */
+            color: black; /* White text */
+            border: none; /* No border */
+            padding: 5px 10px; /* Some padding */
+            text-align: center; /* Centered text */
+            text-decoration: none; /* No underline */
+            display: inline-block; /* Inline-block for spacing */
+            font-size: 10px; /* Larger font size */
+            margin: 4px 2px; /* Margin for spacing */
+            cursor: pointer; /* Pointer cursor on hover */
+            border-radius: 10px; /* Rounded corners */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        .country-code-button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+
       
     
         
@@ -281,6 +307,10 @@ option {
         
         <label for="countries" class="bubble-label">Country :</label>
         <input type="text" id="countries" name="countries" placeholder="Enter country codes, e.g., USA, CAN" class="bubble-input">
+        <a href="{% url 'get_country_code' %}" class="country-code-button">
+            Click here to know country code
+        </a>
+
         
         <label for="sectors" class="bubble-label">Sectors:</label>
         <select id="sectors" name="sectors" class="bubble-select">
@@ -310,64 +340,93 @@ option {
     <div id="result"></div>
 
     <script>
-        document.getElementById('emissionsForm').onsubmit = async function(event) {
-            event.preventDefault(); 
+       document.getElementById('emissionsForm').onsubmit = async function(event) {
+    event.preventDefault(); 
 
-            const formData = new FormData(this);
-            const response = await fetch(this.action, {
-                method: 'POST',
-                body: formData
+    const formData = new FormData(this);
+    const response = await fetch(this.action, {
+        method: 'POST',
+        body: formData
+    });
+
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = ""; 
+
+    if (response.ok) {
+        const data = await response.json();
+        if (data && data.assets) { 
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+
+            // Function to recursively filter out any unwanted fields (e.g., thumbnails)
+            function filterOutThumbnail(obj) {
+                // Check if the object is an array
+                if (Array.isArray(obj)) {
+                    return obj.map(item => filterOutThumbnail(item)); // Recursively filter each item in the array
+                }
+                // Check if the object is a plain object
+                if (typeof obj === 'object' && obj !== null) {
+                    const filteredObj = {};
+                    Object.keys(obj).forEach(key => {
+                        // Skip fields that are thumbnail or image-related
+                        if (!key.toLowerCase().includes('thumbnail') && !key.toLowerCase().includes('image')) {
+                            filteredObj[key] = filterOutThumbnail(obj[key]);
+                        }
+                    });
+                    return filteredObj;
+                }
+                return obj; // Return the value if it's not an object or array
+            }
+
+            // Filter all assets to remove thumbnails
+            const filteredAssets = data.assets.map(asset => filterOutThumbnail(asset));
+
+            // Get headers based on the filtered data
+            const headers = Object.keys(filteredAssets[0] || {});
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+    const th = document.createElement('th');
+    th.textContent = header
+        .replace(/([a-z])([A-Z])/g, '$1 $2') // Adds space before uppercase letters
+        .replace(/_/g, ' '); // Replaces underscores with spaces
+    headerRow.appendChild(th);
+});
+
+            thead.appendChild(headerRow);
+
+            // Loop through filtered assets and populate the table
+            filteredAssets.forEach(asset => {
+                const row = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    const value = asset[header];
+                    if (Array.isArray(value)) {
+                        td.textContent = value.map(item => 
+                            typeof item === 'object' ? JSON.stringify(item) : item
+                        ).join(', ');
+                    } else if (typeof value === 'object' && value !== null) {
+                        td.textContent = JSON.stringify(value);
+                    } else {
+                        td.textContent = value || '';
+                    }
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
             });
 
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = ""; 
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            resultDiv.appendChild(table);
+        } else {
+            resultDiv.textContent = "No data available.";
+        }
+    } else {
+        const error = await response.json();
+        resultDiv.textContent = `Error: ${error.message}`;
+    }
+};
 
-            if (response.ok) {
-                const data = await response.json();
-                if (data && data.assets) { 
-                    const table = document.createElement('table');
-                    const thead = document.createElement('thead');
-                    const tbody = document.createElement('tbody');
-
-                    const headers = Object.keys(data.assets[0] || {});
-                    const headerRow = document.createElement('tr');
-                    headers.forEach(header => {
-                        const th = document.createElement('th');
-                        th.textContent = header;
-                        headerRow.appendChild(th);
-                    });
-                    thead.appendChild(headerRow);
-
-                    data.assets.forEach(asset => {
-                        const row = document.createElement('tr');
-                        headers.forEach(header => {
-                            const td = document.createElement('td');
-                            const value = asset[header];
-                            if (Array.isArray(value)) {
-                                td.textContent = value.map(item => 
-                                    typeof item === 'object' ? JSON.stringify(item) : item
-                                ).join(', ');
-                            } else if (typeof value === 'object' && value !== null) {
-                                td.textContent = JSON.stringify(value);
-                            } else {
-                                td.textContent = value || '';
-                            }
-                            row.appendChild(td);
-                        });
-                        tbody.appendChild(row);
-                    });
-
-                    table.appendChild(thead);
-                    table.appendChild(tbody);
-                    resultDiv.appendChild(table);
-                } else {
-                    resultDiv.textContent = "No data available.";
-                }
-            } else {
-                const error = await response.json();
-                resultDiv.textContent = `Error: ${error.message}`;
-            }
-        };
     </script>
 </body>
 </html>

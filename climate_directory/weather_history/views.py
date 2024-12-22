@@ -1,71 +1,62 @@
+import requests
 from django.shortcuts import render
-import requests
-from datetime import datetime
+from django.http import JsonResponse
+from datetime import datetime, timezone
 
-import requests
-from datetime import datetime
+# OpenWeatherMap API key
+API_KEY = "2567f2a1cf4dec48d3e9a0fcf0457e37"
 
-def fetch_weather_history(api_key, latitude, longitude, date):
-    timestamp = int(date.timestamp())
-    url = "https://api.openweathermap.org/data/3.0/onecall/timemachine"
-    params = {
-        'lat': latitude,
-        'lon': longitude,
-        'dt': timestamp,
-        'appid': api_key,
-        'units': 'metric'
-    }
-    
+def weather_data_view(request):
+    # Check if 'location' and 'date' are in GET parameters
+    location = request.GET.get("location", None)
+    date = request.GET.get("date", None)  # Date in YYYY-MM-DD format
+
+    if not location:
+        return render(request, "weather_data.html", {"error": "Please enter a location to search for weather data."})
+
+    if not date:
+        return render(request, "weather_data.html", {"error": "Please enter a valid date in YYYY-MM-DD format."})
+
     try:
-        # Make the API request
-        response = requests.get(url, params=params)
-        response.raise_for_status()
-        data = response.json()
-        
-        # Print the entire API response for debugging
-        print("API response:", data)
-        
-        # Check for 'data' key instead of 'hourly'
-        if "data" not in data:
-            error_message = data.get("message", "Unexpected response structure from API.")
-            return {"error": error_message}
-        
-        # Extract the first available data point from 'data'
-        weather_info = data["data"][0]  # Accessing the first entry in 'data'
-        
-        return {
-            "temperature": weather_info.get("temp", "Data not available"),
-            "weather": weather_info.get("weather", [{}])[0].get("description", "Data not available"),
-            "timestamp": weather_info.get("dt", "Data not available"),
-            "sunrise": weather_info.get("sunrise", "Data not available"),
-            "sunset": weather_info.get("sunset", "Data not available")
+        # Convert the provided date to a UNIX timestamp
+        dt_obj = datetime.strptime(date, "%Y-%m-%d")
+        dt = int(dt_obj.replace(tzinfo=timezone.utc).timestamp())
+
+        # API endpoint and parameters for location search
+        geocoding_url = "http://api.openweathermap.org/geo/1.0/direct"
+        geocoding_params = {
+            "q": location,
+            "limit": 1,
+            "appid": API_KEY,
         }
-        
-    except requests.exceptions.RequestException as e:
-        return {"error": f"Request error: {str(e)}"}
 
+        # Get latitude and longitude for the location
+        geocoding_response = requests.get(geocoding_url, params=geocoding_params)
+        geocoding_response.raise_for_status()
+        geocoding_data = geocoding_response.json()
+        if not geocoding_data:
+            return render(request, "weather_data.html", {"error": "Location not found."})
 
+        lat = geocoding_data[0]["lat"]
+        lon = geocoding_data[0]["lon"]
 
+        # Prepare for weather data retrieval
+        weather_url = f"https://api.openweathermap.org/data/3.0/onecall/timemachine"
+        weather_params = {
+            "lat": lat,
+            "lon": lon,
+            "dt": dt,
+            "appid": API_KEY,
+        }
 
-def weather_history_view(request):
-    weather_data = None
-    error = None
-    
-    if request.method == "POST":
-        api_key = "2567f2a1cf4dec48d3e9a0fcf0457e37"  
-        latitude = float(request.POST.get("latitude"))
-        longitude = float(request.POST.get("longitude"))
-        date_str = request.POST.get("date")
-        
-        try:
-            date = datetime.strptime(date_str, "%Y-%m-%d")
-            weather_data = fetch_weather_history(api_key, latitude, longitude, date)
-            
-            if "error" in weather_data:
-                error = weather_data["error"]
-                weather_data = None
-                
-        except ValueError:
-            error = "Invalid date format. Please use YYYY-MM-DD."
-    
-    return render(request, "index.html", {"weather_data": weather_data, "error": error})
+        # Get weather data
+        weather_response = requests.get(weather_url, params=weather_params)
+        weather_response.raise_for_status()
+        weather_data = weather_response.json()
+    except ValueError:
+        return render(request, "weather_data.html", {"error": "Invalid date format. Please use YYYY-MM-DD."})
+    except requests.RequestException as e:
+        return render(request, "weather_data.html", {"error": str(e)})
+
+    # Pass the data to the template
+    return render(request, "weather_data.html", {"weather_data": weather_data})
