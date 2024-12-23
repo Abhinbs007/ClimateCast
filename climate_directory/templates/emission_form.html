@@ -340,6 +340,15 @@ th, td {
     <div id="result"></div>
 
     <script>
+        // Get the countryCode from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const countryCode = urlParams.get('countryCode');
+
+        // If a country code is selected, set it in the input field
+        if (countryCode) {
+            const countriesInput = document.getElementById('countries');
+            countriesInput.value = countryCode; // Set the country code in the input field
+        }
        document.getElementById('emissionsForm').onsubmit = async function(event) {
     event.preventDefault(); 
 
