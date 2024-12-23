@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from openpyxl import load_workbook
 
 def get_disaster_data(request):
@@ -7,12 +6,12 @@ def get_disaster_data(request):
     error = None
 
     if request.method == "POST":
-        country_name = request.POST.get('country', '').strip()  # Changed to country
-        filename = r"D:\Natural_disaster\natural_disaster\Disaster_datas.xlsx"  # Specify the correct path and filename
-        country_column = 'Country'  # Column header for country
+        country_name = request.POST.get('country', '').strip()
+        filename = r"D:\Natural_disaster\natural_disaster\Disaster_datas.xlsx"
+        disno_column = 'DisNo.'  # Column header for DisNo.
 
         try:
-            # Try loading the workbook
+            # Load the workbook
             book = load_workbook(filename)
             sheet = book.active
 
@@ -23,8 +22,18 @@ def get_disaster_data(request):
             # Search for rows matching the country
             for row in sheet.iter_rows(min_row=2, values_only=True):  # Skip headers
                 row_data = dict(zip(headers, row))
-                if row_data.get(country_column) == country_name:
+                if row_data.get('Country') == country_name:  # Match the country column
                     results.append(row_data)
+
+            # Sort results by the numerical prefix of DisNo.
+            if results and disno_column in headers:
+                try:
+                    results.sort(
+                        key=lambda x: int(x.get(disno_column, '').split('-')[0]) if x.get(disno_column) else 0,
+                        reverse=True
+                    )
+                except Exception as e:
+                    error = f"Error during sorting by DisNo.: {str(e)}"
 
             if results:
                 data = results
@@ -33,8 +42,6 @@ def get_disaster_data(request):
 
         except FileNotFoundError:
             error = f"File not found: {filename}. Please ensure the file path is correct."
-        except ValueError:
-            error = f"The file format is not supported. Please upload a valid Excel file (.xlsx, .xlsm, .xltx)."
         except Exception as e:
             error = f"An unexpected error occurred: {str(e)}"
 
