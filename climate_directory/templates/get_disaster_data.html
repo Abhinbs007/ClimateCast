@@ -335,6 +335,17 @@
                 <option value="Zambia">
                 <option value="Zimbabwe">
             </datalist>
+            <label for="start_year">Start Year:</label>
+<select id="start_year" name="start_year">
+    <option value="" disabled selected>Select a year</option>
+    <!-- Years will be dynamically populated -->
+</select>
+        
+<label for="end_year">End Year:</label>
+<select id="end_year" name="end_year">
+    <option value="" disabled selected>Select a year</option>
+    <!-- Years will be dynamically populated -->
+</select>
             <button type="submit">Search</button>
         </form>
         
@@ -368,6 +379,25 @@
             </table>
         {% endif %}
     </div>
+    <script>
+        // Populate years dynamically
+        const startYearSelect = document.getElementById("start_year");
+        const endYearSelect = document.getElementById("end_year");
+        const startYear = 1900;
+        const endYear = 2025;
+    
+        for (let year = startYear; year <= endYear; year++) {
+            const startOption = document.createElement("option");
+            startOption.value = year;
+            startOption.textContent = year;
+            startYearSelect.appendChild(startOption);
+    
+            const endOption = document.createElement("option");
+            endOption.value = year;
+            endOption.textContent = year;
+            endYearSelect.appendChild(endOption);
+        }
+    </script>
 </div>
 </body>
 </html>
