@@ -39,14 +39,14 @@
     transition: transform 0.3s ease, color 0.3s ease; 
 }
 
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
+.container {
+        max-width: 100%; /* Allow full-width */
+        margin: 0; /* Remove default margin */
+        padding: 10px 20px; /* Add some padding */
+        background-color: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
         
         h1 {
             text-align: center;
@@ -54,35 +54,39 @@
         }
 
         form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        label {
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-        input[type="text"] {
-            width: 80%;
-            padding: 16px;
-            border: 5px solid #037d50;
-            border-radius: 15px;
-            font-size: 2rem;
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
-        
-        }
-        button {
-            background-color: #4C833E;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 25px;
-            font-size: 2rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start; /* Align items to the left */
+        align-items: center;
+        gap: 20px; /* Spacing between elements */
+        margin: 0; /* Remove bottom margin */
+        padding: 10px;
+        flex-wrap: wrap; /* Ensure wrapping on smaller screens */
+    }
+
+    label {
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    input[type="text"], select {
+        padding: 10px;
+        border: 2px solid #037d50;
+        border-radius: 5px;
+        font-size: 1rem;
+        width: auto; /* Ensure input is not too wide */
+    }
+
+    button {
+        background-color: #4C833E;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
         button:hover {
             background-color: #D2042D;
         }
@@ -106,14 +110,27 @@
             margin-right: 100px;
         }
         table, th, td {
-            border: 1px solid #ddd;
+            border: 1px solid black;
         }
+
+td {
+    text-align: center;
+    padding: 10px;
+    background-color: #fffaf0;
+    border: 1px solid black; /* Explicit black border between cells */
+}
         th {
-            background-color: #3b82f6;
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-        }
+    background-color: #3b82f6;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-right: 3px solid black; /* Black border between header cells */
+    border-bottom: 2px solid black; /* Optional: black border below header row */
+}
+
+th:last-child {
+    border-right: none; /* Removes the right border on the last header cell */
+}
         td {
             text-align: center;
             padding: 10px;
@@ -134,7 +151,7 @@
     </nav>
     <div class="container">
        
-        <h1>Enter the country you want to know</h1>
+        <h1>Enter the country </h1>
         <form method="POST">
             {% csrf_token %}
             <label for="country">Enter Country:</label>
@@ -335,19 +352,28 @@
                 <option value="Zambia">
                 <option value="Zimbabwe">
             </datalist>
-            <label for="start_year">Start Year:</label>
-<select id="start_year" name="start_year">
-    <option value="" disabled selected>Select a year</option>
-    <!-- Years will be dynamically populated -->
-</select>
         
-<label for="end_year">End Year:</label>
-<select id="end_year" name="end_year">
-    <option value="" disabled selected>Select a year</option>
-    <!-- Years will be dynamically populated -->
-</select>
+            <label for="start_year">Start Year:</label>
+            <select id="start_year" name="start_year">
+                <option value="" disabled selected>Select a year</option>
+            </select>
+        
+            <label for="end_year">End Year:</label>
+            <select id="end_year" name="end_year">
+                <option value="" disabled selected>Select a year</option>
+            </select>
+        
+            <label for="disaster_type">Disaster Type:</label>
+            <select id="disaster_type" name="disaster_type">
+                <option value="" disabled selected>Select a disaster type</option>
+                {% for disaster_type in disaster_types %}
+                    <option value="{{ disaster_type }}">{{ disaster_type }}</option>
+                {% endfor %}
+            </select>
+        
             <button type="submit">Search</button>
         </form>
+               
         
 
 
@@ -380,7 +406,6 @@
         {% endif %}
     </div>
     <script>
-        // Populate years dynamically
         const startYearSelect = document.getElementById("start_year");
         const endYearSelect = document.getElementById("end_year");
         const startYear = 1900;
@@ -398,6 +423,7 @@
             endYearSelect.appendChild(endOption);
         }
     </script>
+    
 </div>
 </body>
 </html>
