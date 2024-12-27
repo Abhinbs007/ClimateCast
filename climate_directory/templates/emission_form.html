@@ -50,13 +50,16 @@
 
         /* Form Styling */
         form {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping to the next line if necessary */
+    gap: 20px; /* Space between form elements */
+    margin: 20px 0;
+    align-items: flex-start; /* Align items at the top */
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
         label {
             font-weight: bold;
             margin-bottom: 8px;
@@ -64,24 +67,13 @@
         }
         input[type="number"], input[type="text"] {
             width: 100%;
-            padding: 10px;
+            padding: 5px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 10px;
             font-size: 14px;
         }
-        button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: block;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
+        
         button:hover {
             background-color: #0056b3;
         }
@@ -194,11 +186,14 @@ th, td {
         margin-bottom: 8px;
         color: #4A4A4A;
     }
+    input#countries.bubble-input{
+        max-width: 210px;
+    }
 
     .bubble-input, .bubble-select {
         width: 100%;
-        max-width: 300px;
-        padding: 10px 15px;
+        max-width: 150px;
+        padding: 5px 15px;
         font-size: 16px;
         font-family: Arial, sans-serif;
         color: #333;
@@ -211,6 +206,7 @@ th, td {
         transition: border 0.3s ease, box-shadow 0.3s ease;
         margin-bottom: 10px;
     }
+    ii
 
     .bubble-input:hover, .bubble-select:hover {
         border-color: #888;
@@ -233,7 +229,7 @@ th, td {
     }
 
     button {
-        padding: 12px 20px;
+        padding: 7px 20px;
         background-color: #4C833E;
         color: white;
         font-size: 18px;
@@ -241,6 +237,7 @@ th, td {
         border-radius: 25px;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        margin-left: 120px;
     }
 
     button:hover {
@@ -263,7 +260,7 @@ th, td {
 
 .country-code-button {
             background-color: #4CAF50; /* Green background */
-            color: black; /* White text */
+            color: white; /* White text */
             border: none; /* No border */
             padding: 5px 10px; /* Some padding */
             text-align: center; /* Centered text */
@@ -293,8 +290,7 @@ th, td {
     <form id="emissionsForm" method="POST" action="{% url 'get_emissions_sources' %}">
         {% csrf_token %}
         
-        <label for="limit" class="bubble-label">Number of Records Want (Limit):</label>
-        <input type="number" id="limit" name="limit" value="100" placeholder="Enter number of records" class="bubble-input">
+       
         
         <label for="year" class="bubble-label">Year:</label>
         <select id="year" name="year" class="bubble-select">
@@ -306,8 +302,8 @@ th, td {
         </select>
         
         <label for="countries" class="bubble-label">Country :</label>
-        <input type="text" id="countries" name="countries" placeholder="Enter country codes, e.g., USA, CAN" class="bubble-input">
-        <a href="{% url 'get_country_code' %}" class="country-code-button">
+        <input type="text" id="countries" name="countries" placeholder="Enter country codes, e.g., USA" class="bubble-input">
+        <a href="" class="country-code-button">
             Click here to know country code
         </a>
 
