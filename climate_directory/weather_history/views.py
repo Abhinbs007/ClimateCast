@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from datetime import datetime, timezone
 
-# OpenWeatherMap API key
+# Replace with your actual API key
 API_KEY = "2567f2a1cf4dec48d3e9a0fcf0457e37"
 
 def weather_data_view(request):
@@ -53,6 +53,12 @@ def weather_data_view(request):
         weather_response = requests.get(weather_url, params=weather_params)
         weather_response.raise_for_status()
         weather_data = weather_response.json()
+
+        # Convert temperatures from Kelvin to Celsius
+        for item in weather_data.get('data', []):
+            item['temp'] = round(item['temp'] - 273.15, 2)
+            item['feels_like'] = round(item['feels_like'] - 273.15, 2)
+
     except ValueError:
         return render(request, "weather_data.html", {"error": "Invalid date format. Please use YYYY-MM-DD."})
     except requests.RequestException as e:

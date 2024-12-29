@@ -16,11 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')), 
     path('', include('emission.urls')), 
     path('',include('disaster.urls')),
-    path('',include('weather_history.urls')),
+    path('weather_history/',include('weather_history.urls')),
 ]

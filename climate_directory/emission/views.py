@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.shortcuts import render
 from django.http import JsonResponse
 import requests
+
+
 def countrycode (request):
     return render(request,'country_code.html')
 
