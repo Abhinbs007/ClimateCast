@@ -29,46 +29,53 @@
             height: 50px;
         }
         form {
-            max-width: 600px;
-            margin: 30px auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Spacing between groups */
+    max-width: 100%; /* Ensures the form doesn’t exceed the page width */
+    margin: 30px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-        form label {
-            font-size: 16px;
-            margin-bottom: 8px;
-            display: block;
-            color: #34495e;
-        }
+form div {
+    display: flex;
+    flex-direction: column; /* Stack label and input vertically */
+    align-items: flex-start;
+}
 
-        form input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 3px solid #037d50;
-            border-radius: 5px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
+form div label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #34495e;
+}
 
-        form button {
-            margin-left: 225px;
-            background-color: #4C833E;
-            color: white;
-            border: none;
-            padding: 10px 50px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+form div input {
+    width: auto; /* Adjusts input width to fit horizontally */
+    padding: 10px;
+    border: 3px solid #037d50;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
 
-        form button:hover {
-            background-color: #D2042D;
-        }
+form button {
+    background-color: #4C833E;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #D2042D;
+}
         .weather-data {
             max-width: 600px;
             margin: 20px auto;
@@ -126,7 +133,7 @@
         <label for="location">Enter Location:</label>
         <input type="text" id="location" name="location" placeholder="e.g., Mumbai" required>
         <br><br>
-        <label for="date">Enter Date (YYYY-MM-DD):</label>
+        <label for="date">Enter Date (DD-MM-YYYY):</label>
         <input type="date" id="date" name="date" required>
         <br><br>
         <button type="submit">Search</button>
