@@ -73,7 +73,7 @@
         padding: 10px;
         border: 2px solid #037d50;
         border-radius: 5px;
-        font-size: 1rem;
+        font-size: 10px;
         width: auto; /* Ensure input is not too wide */
     }
 
@@ -83,6 +83,7 @@
         border: none;
         border-radius: 5px;
         padding: 10px 20px;
+        margin-left: 700px;
         font-size: 1rem;
         cursor: pointer;
         transition: background-color 0.3s ease;
@@ -154,9 +155,9 @@ th:last-child {
         <h1>Enter the country </h1>
         <form method="POST">
             {% csrf_token %}
-            <label for="country">Enter Country:</label>
-            <input type="text" id="country" name="country" list="country-list" required>
-            <datalist id="country-list">
+            <label for="country"> Country:</label>
+<input type="text" id="country" name="country" list="country-list">
+<datalist id="country-list">
                 <option value="Afghanistan">
                 <option value="Albania">
                 <option value="Algeria">
@@ -352,6 +353,14 @@ th:last-child {
                 <option value="Zambia">
                 <option value="Zimbabwe">
             </datalist>
+
+            <label for="subregion">Select Subregion:</label>
+            <select id="subregion" name="subregion">
+                <option value="" disabled selected>Select a subregion</option>
+                {% for subregion in subregions %}
+                    <option value="{{ subregion }}">{{ subregion }}</option>
+                {% endfor %}
+            </select>
         
             <label for="start_year">Start Year:</label>
             <select id="start_year" name="start_year">
@@ -388,7 +397,7 @@ th:last-child {
             <table>
                 <thead>
                     <tr>
-                        {% for key in data.0.keys %}
+                        {% for key in data.0.keys %}    
                             <th>{{ key }}</th>
                         {% endfor %}
                     </tr>
@@ -407,21 +416,25 @@ th:last-child {
     </div>
     <script>
         const startYearSelect = document.getElementById("start_year");
-        const endYearSelect = document.getElementById("end_year");
-        const startYear = 1900;
-        const endYear = 2025;
+    const endYearSelect = document.getElementById("end_year");
+    const startYear = 1900;  // Adjust this to the earliest year in your dataset
+    const endYear = 2025;    // Adjust this to the latest year in your dataset
     
-        for (let year = startYear; year <= endYear; year++) {
-            const startOption = document.createElement("option");
-            startOption.value = year;
-            startOption.textContent = year;
-            startYearSelect.appendChild(startOption);
-    
-            const endOption = document.createElement("option");
-            endOption.value = year;
-            endOption.textContent = year;
-            endYearSelect.appendChild(endOption);
-        }
+    // Populate the Start Year dropdown (oldest to newest)
+    for (let year = startYear; year <= endYear; year++) {
+        const startOption = document.createElement("option");
+        startOption.value = year;
+        startOption.textContent = year;
+        startYearSelect.appendChild(startOption);
+    }
+
+    // Populate the End Year dropdown (newest to oldest)
+    for (let year = endYear; year >= startYear; year--) {
+        const endOption = document.createElement("option");
+        endOption.value = year;
+        endOption.textContent = year;
+        endYearSelect.appendChild(endOption);
+    }
     </script>
     
 </div>
