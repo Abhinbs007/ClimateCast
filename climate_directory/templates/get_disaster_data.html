@@ -374,7 +374,7 @@ th:last-child {
         
             <label for="disaster_type">Disaster Type:</label>
             <select id="disaster_type" name="disaster_type">
-                <option value="" disabled selected>Select a disaster type</option>
+                <option value="all">Select All</option> <!-- Option for selecting all disaster types -->
                 {% for disaster_type in disaster_types %}
                     <option value="{{ disaster_type }}">{{ disaster_type }}</option>
                 {% endfor %}

@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from openpyxl import load_workbook
 
-
 def get_disaster_data(request):
     """
     View to fetch and display disaster data based on user-selected filters.
@@ -55,6 +54,11 @@ def get_disaster_data(request):
         start_year = request.POST.get('start_year', '').strip()
         end_year = request.POST.get('end_year', '').strip()
         disaster_type = request.POST.get('disaster_type', '').strip()
+
+        # Handle "Select All" for disaster type
+        if disaster_type == 'all':
+            disaster_type = ''  # Set to empty string to ignore the disaster_type filter
+        disaster_type = disaster_type.strip()  # Ensure no extra spaces
 
         try:
             results = []
