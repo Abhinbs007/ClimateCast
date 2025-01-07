@@ -111,8 +111,9 @@
             margin-right: 100px;
         }
         table, th, td {
-            border: 1px solid black;
-        }
+    border: 1px solid #ccc; /* Use a lighter gray color for borders */
+    border-collapse: collapse; /* Ensure borders are shared between cells */
+}
 
 td {
     text-align: center;
@@ -152,7 +153,7 @@ th:last-child {
     </nav>
     <div class="container">
        
-        <h1>Enter the country </h1>
+        <h1>Select the Country or Subregion </h1>
         <form method="POST">
             {% csrf_token %}
             <label for="country"> Country:</label>
